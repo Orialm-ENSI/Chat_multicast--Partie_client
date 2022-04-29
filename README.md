@@ -3,6 +3,10 @@ Projet de chat multicast demandé pour le cours d'OS et réseau // Côté client
 
 --------------------------------------
 
+# Client-1.2.0 : Amélioration de l'affichage
+1) Prise en charge des liens hypertexte
+2) Mise en évidence des messages de l'utilisateur
+
 # Client-1.1.0 : Ajout d'une formatage des messages
 1) Les messages échangés sont maintenant affichés dans le client avec la date, l'heure, et le pseudo en gras. Possibilité d'améliorer pour formater des échanges autres que du texte.
 2) Ajout d'une taille mimimale à la zone d'affichage des messages.

@@ -11,6 +11,7 @@
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QTextBrowser>
 
 
 class fenetre_client : public QWidget {
@@ -18,7 +19,8 @@ public:
     fenetre_client();
 
 private: //methodes
-    void afficher_texte(const QStringList& elements);
+    void afficher_texte(const QStringList& elements, const int& message_du_client);
+    void recherche_liens(QString &message_a_envoyer);
 
 private slots:
     /*Renommer en français ! */
@@ -45,7 +47,7 @@ private: //Widgets
     QPushButton *bouton_deconnexion=nullptr;
     //~~~ Echange
     QLineEdit *champ_message=nullptr;
-    QTextEdit *historique_messages=nullptr;
+    QTextBrowser *historique_messages=nullptr;
     QPushButton *bouton_envoyer=nullptr;
     //~~~ Layout
     QVBoxLayout *layout=nullptr;

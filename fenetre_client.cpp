@@ -41,9 +41,10 @@ interface:
         champ_message->setPlaceholderText("Ecrivez un message...");
     }
 
-    historique_messages=new QTextEdit(this);
+    historique_messages=new QTextBrowser(this);
     {
-        historique_messages->setReadOnly(true);
+        historique_messages->setOpenExternalLinks(true);
+        historique_messages->setTextInteractionFlags(Qt::TextBrowserInteraction); //Par défaut pour QTextBrowser
         historique_messages->setMinimumSize(450, 450); //La doc ne m'indique pas quelle est l'unité de ces nombres. Ce ne sont pas des pixels, car 1920*1080, ça dépasse d'un écran 4K
     }
 
@@ -135,7 +136,8 @@ void fenetre_client::donneesRecues()
 
             if(elements[0] == "TEXT")
             {
-                fenetre_client::afficher_texte(elements);
+                if(elements[2] == champ_pseudo->text()){ fenetre_client::afficher_texte(elements, 1); }
+                else{ fenetre_client::afficher_texte(elements, 0); }
             }
             else{
                 historique_messages->append("message mal formaté reçu"); /*plutôt mettre ça côté serveur*/
@@ -148,11 +150,41 @@ void fenetre_client::donneesRecues()
     }while(!in.atEnd());
 }
 
-void fenetre_client::afficher_texte(const QStringList &elements)
+void fenetre_client::afficher_texte(const QStringList &elements, const int& message_du_client)
 {
-    QString message_a_afficher = "<strong>" + elements[1] + ", " + elements[2] + " :</strong> " + elements[3];
+    QString message = elements[3];
+    fenetre_client::recherche_liens(message);
+    QString message_a_afficher = "<strong>" + elements[1] + ", " + elements[2] + " :</strong>" + " ";
+
+    "<strong>" + elements[1] + ", " + elements[2] + " :</strong>" + " ";
+    if(message_du_client){
+        message_a_afficher = "<span style=\"color:red\">" + message_a_afficher + "</span>";
+    }
+    message_a_afficher = message_a_afficher + message;
     historique_messages->append(message_a_afficher);
 }
+
+
+void fenetre_client::recherche_liens(QString &message)
+{
+    qsizetype position_lien = message.indexOf("https://"); // Pour définir pleinement le début d'un lien et pas juste un https qui traîne
+    qsizetype position_espace;
+
+    if(position_lien != -1){
+        QString lien = message.mid(position_lien, message.size() - position_lien + 1);
+        position_espace = lien.indexOf(' '); //Le lien s'arrête forcément à un espace
+        if(position_espace == -1){ //Si le message se termine par un lien
+            position_espace = message.size()-1;
+        }
+        else{
+            position_espace += position_lien;
+        }
+        message.insert(position_espace, " \"> lien externe </a>");
+        message.insert(position_lien, "<a href=\"");
+    }
+}
+
+
 
 void fenetre_client::connecte()
 {
