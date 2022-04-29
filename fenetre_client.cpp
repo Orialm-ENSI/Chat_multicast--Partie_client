@@ -112,29 +112,33 @@ void fenetre_client::on_boutonEnvoyer_clicked(){
 
 void fenetre_client::donneesRecues()
 {
-    debut:
-    // Recuperation du message
-    QDataStream in(socket); /*rendre les if plus propres */
-    if(tailleMessage == 0){ // Si on a pas déjà la taille du message
+    QDataStream in(socket);
+    do{
+        if(tailleMessage == 0){ // Si on a pas déjà la taille du message
 
-        if(socket->bytesAvailable() < (int)sizeof(quint16)){ // Si on a pas au moins un int, alors on a pas encore reçu le message en entier
+            if(socket->bytesAvailable() >= (int)sizeof(quint16)){
+                in >> tailleMessage; // Si on au moins un entier, alors on a la taille du message
+            }
+            else{ // Si on a pas au moins un int, alors on a pas encore reçu le message en entier
+                return;
+            }
+        }
+
+        if(socket->bytesAvailable() >= tailleMessage){
+            QString messageRecu;
+            in >> messageRecu; // On vide entièrement in dans message;
+            historique_messages->append(messageRecu + " Recu "); // On l'envoi à tout le monde;
+            tailleMessage = 0; // On se rend prêt à recevoir un nouveau message;
+        }
+        else{ // Si on a pas encore le message entier, on attend
             return;
         }
-        in >> tailleMessage; // Si on au moins un entier, alors on a la taille du message
-    }
-
-    if(socket->bytesAvailable() < tailleMessage) {return;} // Si on a pas encore le message entier, on attend
-
-    QString messageRecu;
-    in >> messageRecu; // On vide entièrement in dans message;
-    historique_messages->append(messageRecu + " Recu "); // On l'envoi à tout le monde;
-    tailleMessage = 0; // On se rend prêt à recevoir un nouveau message;
-    if(!in.atEnd()){goto debut;}
+    }while(!in.atEnd());
 }
 
 void fenetre_client::connecte()
 {
-    historique_messages->append("Vous êtes connecté sous le pseudo"+champ_pseudo->text());
+    historique_messages->append("Vous êtes connecté sous le pseudo "+champ_pseudo->text());
 }
 
 void fenetre_client::deconnecte()
