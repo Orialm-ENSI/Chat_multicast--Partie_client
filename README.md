@@ -3,6 +3,10 @@ Projet de chat multicast demandé pour le cours d'OS et réseau // Côté client
 
 --------------------------------------
 
+# Client-1.1.0 : Ajout d'une formatage des messages
+1) Les messages échangés sont maintenant affichés dans le client avec la date, l'heure, et le pseudo en gras. Possibilité d'améliorer pour formater des échanges autres que du texte.
+2) Ajout d'une taille mimimale à la zone d'affichage des messages.
+
 # Client-1.0.4 : corrections de propreté
 1) remplacement du goto/label par une boucle do/while dans le slot "donneesRecues"
 2) dans le slot "donneesRecues", réécriture des if : Les conditions sont inversées dans les if, ce qui était fait précédément si on entrait pas dans le if est désormais fait si on entre dans les if, et les return vont dans les else, comme cas par défaut. Les if n'ont plus de pate en l'air.

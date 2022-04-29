@@ -10,11 +10,15 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QScrollArea>
+#include <QtWidgets/QGridLayout>
 
 
 class fenetre_client : public QWidget {
 public:
     fenetre_client();
+
+private: //methodes
+    void afficher_texte(const QStringList& elements);
 
 private slots:
     /*Renommer en français ! */
@@ -44,7 +48,7 @@ private: //Widgets
     QTextEdit *historique_messages=nullptr;
     QPushButton *bouton_envoyer=nullptr;
     //~~~ Layout
-    QVBoxLayout *layout=nullptr; /* Temporairement, l'interface sera une colonne*/
+    QVBoxLayout *layout=nullptr;
     //Elements de réseau
     QTcpSocket *socket=nullptr; // Représente le serveur
     quint16 tailleMessage = 0;

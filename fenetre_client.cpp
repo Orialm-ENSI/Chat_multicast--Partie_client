@@ -44,7 +44,7 @@ interface:
     historique_messages=new QTextEdit(this);
     {
         historique_messages->setReadOnly(true);
-        //for(int i = 40; i>=1;i--){historique_messages->append(QString("ligne %1").arg(i));}
+        historique_messages->setMinimumSize(450, 450); //La doc ne m'indique pas quelle est l'unité de ces nombres. Ce ne sont pas des pixels, car 1920*1080, ça dépasse d'un écran 4K
     }
 
     bouton_envoyer = new QPushButton("Envoyer", this);
@@ -64,8 +64,11 @@ interface:
         layout->addWidget(historique_messages);
         layout->addWidget(champ_message);
         layout->addWidget(bouton_envoyer);
-        setWindowTitle("Fenetre du client");
+
     }
+    setWindowTitle("Fenetre du client");
+
+
 }
 
 reseau:
@@ -99,7 +102,7 @@ void fenetre_client::on_boutonConnexion_clicked()
 void fenetre_client::on_boutonEnvoyer_clicked(){
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
-    QString messageAEnvoyer = champ_pseudo->text() + " : " + champ_message->text();
+    QString messageAEnvoyer = champ_pseudo->text() + "|" + champ_message->text();
 
     out << (quint16) 0;
     out << messageAEnvoyer;
@@ -126,14 +129,29 @@ void fenetre_client::donneesRecues()
 
         if(socket->bytesAvailable() >= tailleMessage){
             QString messageRecu;
-            in >> messageRecu; // On vide entièrement in dans message;
-            historique_messages->append(messageRecu + " Recu "); // On l'envoi à tout le monde;
-            tailleMessage = 0; // On se rend prêt à recevoir un nouveau message;
+            in >> messageRecu; // On vide entièrement in dans message
+
+            QStringList elements = messageRecu.QString::split("|");
+
+            if(elements[0] == "TEXT")
+            {
+                fenetre_client::afficher_texte(elements);
+            }
+            else{
+                historique_messages->append("message mal formaté reçu"); /*plutôt mettre ça côté serveur*/
+            }
+            tailleMessage = 0; // On se rend prêt à recevoir un nouveau message
         }
         else{ // Si on a pas encore le message entier, on attend
             return;
         }
     }while(!in.atEnd());
+}
+
+void fenetre_client::afficher_texte(const QStringList &elements)
+{
+    QString message_a_afficher = "<strong>" + elements[1] + ", " + elements[2] + " :</strong> " + elements[3];
+    historique_messages->append(message_a_afficher);
 }
 
 void fenetre_client::connecte()
