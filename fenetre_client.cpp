@@ -113,21 +113,26 @@ void fenetre_client::on_boutonEnvoyer_clicked(){
 void fenetre_client::donneesRecues()
 {
     // Recuperation du message
-    QDataStream in(socket); /*rendre les if plus propres */
+    QDataStream in(socket);
     if(tailleMessage == 0){ // Si on a pas déjà la taille du message
 
         if(socket->bytesAvailable() < (int)sizeof(quint16)){ // Si on a pas au moins un int, alors on a pas encore reçu le message en entier
             return;
         }
-        in >> tailleMessage; // Si on au moins un entier, alors on a la taille du message
+        else{
+            in >> tailleMessage; // Si on au moins un entier, alors on a la taille du message
+        }
     }
 
-    if(socket->bytesAvailable() < tailleMessage) {return;} // Si on a pas encore le message entier, on attend
-
-    QString messageRecu;
-    in >> messageRecu; // On vide entièrement in dans message;
-    historique_messages->append(messageRecu + " Recu "); // On l'envoi à tout le monde;
-    tailleMessage = 0; // On se rend prêt à recevoir un nouveau message;
+    else if(socket->bytesAvailable() < tailleMessage){ // Si on a pas encore le message entier, on attend
+        return;
+    }
+    else{
+        QString messageRecu;
+        in >> messageRecu; // On vide entièrement in dans message;
+        historique_messages->append(messageRecu + " Recu "); // On l'envoi à tout le monde;
+        tailleMessage = 0; // On se rend prêt à recevoir un nouveau message;
+    }
 }
 
 void fenetre_client::connecte()
@@ -146,7 +151,3 @@ void fenetre_client::deconnecte()
     champ_pseudo->setReadOnly(false);
     champ_message->setReadOnly(true);
 }
-
-
-
-// QObject::connect(serveur, &QTcpServer::newConnection, this, &fenetre_serveur::nouvelleConnexion);

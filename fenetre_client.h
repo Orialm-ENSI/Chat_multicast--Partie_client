@@ -34,32 +34,21 @@ private slots:
 private: //Widgets
     //Elements de l'interface
     //~~~ Identification et connexion
-    QLineEdit *champ_pseudo;
-    QLineEdit *champ_adresse;
-    QLineEdit *champ_port;
-    QPushButton *bouton_connexion;
-    QPushButton *bouton_deconnexion;
+    QLineEdit *champ_pseudo=nullptr;
+    QLineEdit *champ_adresse=nullptr;
+    QLineEdit *champ_port=nullptr;
+    QPushButton *bouton_connexion=nullptr;
+    QPushButton *bouton_deconnexion=nullptr;
     //~~~ Echange
-    QLineEdit *champ_message;
+    QLineEdit *champ_message=nullptr;
     QTextEdit *historique_messages=nullptr;
-    QPushButton *bouton_envoyer;
+    QPushButton *bouton_envoyer=nullptr;
     //~~~ Layout
-    QVBoxLayout *layout; /* Temporairement, l'interface sera une colonne*/
+    QVBoxLayout *layout=nullptr; /* Temporairement, l'interface sera une colonne*/
     //Elements de réseau
-    QTcpSocket *socket; // Représente le serveur
+    QTcpSocket *socket=nullptr; // Représente le serveur
     quint16 tailleMessage = 0;
 
 };
 
 #endif // FENETRE_CLIENT_H
-/*
-private:
-    // Elements de l'interface
-    QLabel *etatServeur;
-    QPushButton *boutonQuitter;
-    QVBoxLayout *layout;
-
-    // Elements de réseau
-    QTcpServer *serveur;
-    QList<QTcpSocket *> clients;
-    quint16 tailleMessage = 0;*/
